@@ -3,7 +3,7 @@ from typing import Optional, List
 from datetime import date
 from uuid import UUID
 from sqlmodel import Session, select
-from ..models import Expense
+from ..infra.models import Expense
 from ..db import get_session
 from ..schemas import ExpenseCreate, ExpenseUpdate
 

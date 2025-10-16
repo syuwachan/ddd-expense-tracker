@@ -1,30 +1,27 @@
 from typing import List, Optional
 from datetime import date
 from uuid import UUID
-from ...repositories.expense_repository import ExpenseRepository
-from ...schemas import ExpenseCreate, ExpenseUpdate, Expense
+from ..repositories.expense_repository import ExpenseRepository
+from ..schemas import ExpenseCreate, ExpenseUpdate
+from ..infra.models import Expense
 
 class ExpenseService:
     @staticmethod
-    def __init__(self, repository: ExpenseRepository):
-        self.repository = repository
+    def create_expense(user_id: UUID, expense_create: ExpenseCreate) -> Expense:
+        return ExpenseRepository.create(user_id, expense_create)
 
     @staticmethod
-    def create_expense(self, expense_create: ExpenseCreate) -> Expense:
-        return self.repository.create(expense_create)
-    
+    def get_expense(user_id: UUID, expense_id: UUID) -> Optional[Expense]:
+        return ExpenseRepository.get(user_id, expense_id)
+
     @staticmethod
-    def get_expense(self, expense_id: UUID) -> Optional[Expense]:
-        return self.repository.get(expense_id)
+    def update_expense(user_id: UUID, expense_id: UUID, expense_data: ExpenseUpdate) -> Expense:
+        return ExpenseRepository.update(user_id, expense_id, expense_data)
 
-    def update_expense(self, expense_id: UUID, expense_update: ExpenseUpdate) -> Optional[Expense]:
-        return self.repository.update(expense_id, expense_update)
+    @staticmethod
+    def delete_expense(user_id: UUID, expense_id: UUID) -> None:
+        ExpenseRepository.delete(user_id, expense_id)
 
-    def delete_expense(self, expense_id: UUID) -> bool:
-        return self.repository.delete(expense_id)
-
-    def list_expenses(self, skip: int = 0, limit: int = 100) -> List[Expense]:
-        return self.repository.list(skip=skip, limit=limit)
-
-    def list_expenses_by_date_range(self, start_date: date, end_date: date) -> List[Expense]:
-        return self.repository.list_by_date_range(start_date=start_date, end_date=end_date)
+    @staticmethod
+    def list_expenses(user_id: UUID, category: Optional[str] = None, date: Optional[date] = None) -> List[Expense]:
+        return ExpenseRepository.filter(user_id, category, date)
