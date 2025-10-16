@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .routers import expense_router
 from .db import init_db
 
@@ -7,6 +8,15 @@ app=FastAPI(
 	version="1.0.0",
 	description="API for tracking personal expenses"
 	)
+
+# CORS設定
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize the database
 @app.on_event("startup")

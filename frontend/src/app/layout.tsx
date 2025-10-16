@@ -1,19 +1,16 @@
-import type { Metadata } from 'next';
-import './globals.css';
+"use client";
 
-export const metadata: Metadata = {
-  title: 'Expense Tracker',
-  description: 'Track your personal expenses',
-};
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactNode, useState } from "react";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
-    <html lang="ja">
-      <body>{children}</body>
+    <html lang="en">
+      <body>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </body>
     </html>
   );
 }
