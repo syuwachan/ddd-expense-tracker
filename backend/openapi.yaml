@@ -1,0 +1,222 @@
+openapi: 3.0.3
+info:
+  title: Simple Expense Tracker API
+  version: 1.0.1
+  description: >
+    API specification for a FastAPI-based household expense tracking app.  
+    Provides endpoints to create, read, update, and delete expense records.
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+  - url: https://staging.example.com/v1
+    description: Staging server
+
+tags:
+  - name: Expenses
+    description: Expense data management
+
+security:
+  - bearerAuth: []
+
+paths:
+  /expenses:
+    get:
+      tags: [Expenses]
+      summary: Retrieve a list of expenses
+      operationId: listExpenses
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filter by a specific category
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          description: Filter by a specific date
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successfully retrieved a list of expenses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expense"
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+
+    post:
+      tags: [Expenses]
+      summary: Create a new expense
+      operationId: createExpense
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseCreate"
+      responses:
+        "201":
+          description: Successfully created a new expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+
+  /expenses/{expenseId}:
+    get:
+      tags: [Expenses]
+      summary: Retrieve a specific expense by ID
+      operationId: getExpense
+      parameters:
+        - in: path
+          name: expenseId
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successfully retrieved the expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Expense not found
+        "500":
+          description: Internal server error
+
+    put:
+      tags: [Expenses]
+      summary: Update an existing expense
+      operationId: updateExpense
+      parameters:
+        - in: path
+          name: expenseId
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseUpdate"
+      responses:
+        "200":
+          description: Successfully updated the expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized
+        "404":
+          description: Expense not found
+        "500":
+          description: Internal server error
+
+    delete:
+      tags: [Expenses]
+      summary: Delete an expense
+      operationId: deleteExpense
+      parameters:
+        - in: path
+          name: expenseId
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Successfully deleted the expense
+        "401":
+          description: Unauthorized
+        "404":
+          description: Expense not found
+        "500":
+          description: Internal server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Expense:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "b7a8f1de-5e3a-4d2a-91db-6a4b9a23fbbb"
+        category:
+          type: string
+          example: "Food"
+        amount:
+          type: integer
+          example: 1200
+        memo:
+          type: string
+          example: "Lunch"
+        created_at:
+          type: string
+          format: date
+          example: "2025-10-16"
+
+    ExpenseCreate:
+      type: object
+      required: [category, amount]
+      properties:
+        category:
+          type: string
+          example: "Transportation"
+        amount:
+          type: integer
+          example: 500
+        memo:
+          type: string
+          example: "Train fare"
+
+    ExpenseUpdate:
+      type: object
+      properties:
+        category:
+          type: string
+        amount:
+          type: integer
+        memo:
+          type: string
