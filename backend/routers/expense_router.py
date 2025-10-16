@@ -15,7 +15,7 @@ def list_expenses(
     return ExpenseService.list_expenses(user.id,category,date)
 
 # create expense
-@router.post('/',response_class=Expense,status_code=201)
+@router.post('/',response_model=Expense,status_code=201)
 def create_expense(expense:ExpenseCreate,user=Depends(get_current_user)):
     return ExpenseService.create_expense(user.id,expense)
 
