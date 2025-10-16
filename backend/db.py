@@ -1,4 +1,4 @@
-from sqlmodek import SQLModel, create_engine,Session
+from sqlmodel import SQLModel, create_engine, Session
 
 DATABASE_URL="sqlite:///./app.db"
 engine=create_engine(DATABASE_URL,echo=True)

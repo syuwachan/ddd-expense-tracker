@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .api.routers import expense_router
+from .routers import expense_router
 from .db import init_db
 
 app=FastAPI(
@@ -15,7 +15,7 @@ def on_startup():
 
 
 # Register routers
-app.include_router(expense_router.router,prefix="/api")
+app.include_router(expense_router, prefix="/api")
 
 @app.get("/")
 def root():

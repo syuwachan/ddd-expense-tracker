@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from datetime import date
 from uuid import UUID
-from ...schemas import ExpenseCreate, ExpenseUpdate, Expense
-from ...services.expense_service import ExpenseService
-from ...auth import get_current_user
+from ..schemas import ExpenseCreate, ExpenseUpdate, Expense
+from ..services.expense_service import ExpenseService
+from ..auth import get_current_user
 
 router=APIRouter(prefix="/expenses", tags=["Expenses"])
 
